@@ -6,6 +6,7 @@
 [nest](https://docs.nestjs.cn/9/firststeps) 强大的 web 框架，生态完备。[Next.js](https://nextjs.org/docs)强大的 ssr 前端框架。强强联合
 
 [nest](https://docs.nestjs.cn/9/firststeps) 的写法, 给个 controller 的例子
+
 /src/app.controller.ts
 ```typescript
 import { Controller, Get, Query } from '@nestjs/common';
@@ -31,3 +32,6 @@ export async function getServerSideProps(context: NextPageContext) {
   }
 }
 ```
+
+在线访问页面 https://keyboard3.com/next-nest/
+在线访问api https://keyboard3.com/next-nest/api/get_user
