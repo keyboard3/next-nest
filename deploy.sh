@@ -1,3 +1,3 @@
-export PROJECT_NAME=next-daruk
+export PROJECT_NAME=next-nest
 cat deploy/deployment.yml | envsubst | kubectl apply -f -
 cat deploy/service.yml | envsubst | kubectl apply -f -
