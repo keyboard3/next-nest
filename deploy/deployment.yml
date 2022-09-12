@@ -16,6 +16,6 @@ spec:            #这是对于该Deployment的形容，能够了解为你期待�
     spec:        #冀望Pod实现的性能（即在pod中部署）
       containers:    #生成container，与docker中的container是同一种
       - name: ${PROJECT_NAME}    #container的名称
-        image: keyboard3/${PROJECT_NAME}:v1.0    #应用镜像nginx创立container，
+        image: keyboard3/${PROJECT_NAME}:v1.1    #应用镜像nginx创立container，
         ports:
           - containerPort: 3000   #外部服务裸露的端口

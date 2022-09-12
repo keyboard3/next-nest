@@ -11,4 +11,4 @@ RUN npm run build
 
 ENV NODE_ENV=production
 ENV BASE_PATH=/next-nest
-CMD ["npm","run", "start:prd"]
+CMD ["npm","run", "start:prod"]
