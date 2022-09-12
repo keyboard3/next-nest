@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { getApi } from "../src/req"
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = ({ name }: any) => {
+const Home: NextPage = ({ cats }: { cats: Cat[] }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -15,42 +15,22 @@ const Home: NextPage = ({ name }: any) => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">尊贵 {name}</a>
+          家里的猫
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
+          data from mongo
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          {cats.map(cat => {
+            return (
+              <a href="https://nextjs.org/docs" className={styles.card}>
+                <h2>名字:{cat.name}</h2>
+                <p>年龄:{cat.age}</p>
+                <p>品种:{cat.breed}</p>
+              </a>)
+          })}
         </div>
       </main>
 
@@ -73,8 +53,14 @@ const Home: NextPage = ({ name }: any) => {
 export default Home
 
 export async function getServerSideProps(context: NextPageContext) {
-  const user: any = await getApi('get_user?uid=111');
+  const cats = await getApi('cats');
   return {
-    props: { name: user.username }, // will be passed to the page component as props
+    props: { cats }, // will be passed to the page component as props
   }
+}
+
+interface Cat {
+  readonly name: string;
+  readonly age: number;
+  readonly breed: string;
 }
