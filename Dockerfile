@@ -16,7 +16,7 @@ RUN yarn build
 FROM serverdeps AS runner
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/.development.env .production.env
+COPY --from=builder /app/.production.env .
 
 ENV NODE_ENV=production
 ENV BASE_PATH=/next-nest
