@@ -6,11 +6,11 @@ const hostname = 'localhost'
 const port = 3000
 const basePath = process.env.BASE_PATH || "";
 
-const app = next({ dev, hostname, port, conf: { basePath, typescript: { ignoreBuildErrors: true } } })
+const app = next({ dev, hostname, port, dir: "../render", conf: { basePath, typescript: { ignoreBuildErrors: true } } })
 app.prepare();
 const nextRequestHandler = app.getRequestHandler();
 
-export function nextJS(req, res, next) {
+function exposeApiRouterMiddleware(req, res, next) {
   const parsedUrl = parse(req.url, true)
   const { pathname } = parsedUrl
   if (pathname?.startsWith('/api')) {
@@ -21,3 +21,4 @@ export function nextJS(req, res, next) {
     nextRequestHandler(req, res, parsedUrl);
   }
 };
+export default exposeApiRouterMiddleware;

@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './app.module';
-import { nextJS } from "./next.middleware";
+import nextJS from "./next-bridge.middleware";
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule);

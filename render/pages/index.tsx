@@ -1,7 +1,7 @@
 import type { NextPage, NextPageContext } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { getApi } from "../src/req"
+import { getApi } from "../req-bridge"
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = ({ cats }: { cats: Cat[] }) => {

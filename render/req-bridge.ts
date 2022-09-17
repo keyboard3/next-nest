@@ -1,5 +1,4 @@
-import http from "http";
-import { INestApplication } from '@nestjs/common';
+import * as http from "http";
 const mockRequest = {
   headers: {
     'x-forwarded-for': '127.0.0.1',
@@ -28,7 +27,7 @@ function mockContext(req?: {}) {
   return { req: request, res: response }
 }
 export async function getApi(url: string, query?: any) {
-  const appServer: INestApplication = (global as any).nestApp;
+  const appServer: any = (global as any).nestApp;
   const mockCtx = mockContext({
     url: `/api/${url}`,
     path: `/api/${url}`,
