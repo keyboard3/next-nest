@@ -13,15 +13,19 @@ COPY server/package.json ./server/package.json
 COPY render/package.json ./render/package.json
 RUN NODE_ENV=production yarn --frozen-lockfile
 
-FROM deps AS builder
-COPY . .
-RUN yarn build
+FROM deps AS renderbuilder
+COPY render ./render
+RUN npm run renderBuild
+
+FROM deps AS serverbuilder
+COPY server ./server
+RUN npm run serverBuild
 
 FROM serverdeps AS runner
-COPY --from=builder /app/render/.next ./render/.next
-COPY --from=builder /app/render/public ./render/public
-COPY --from=builder /app/server/dist ./server/dist
-COPY --from=builder /app/server/.production.env ./server/
+COPY --from=renderbuilder /app/render/.next ./render/.next
+COPY --from=renderbuilder /app/render/public ./render/public
+COPY --from=serverbuilder /app/server/dist ./server/dist
+COPY --from=serverbuilder /app/server/.production.env ./server/
 
 ENV NODE_ENV=production
 ENV BASE_PATH=/next-nest
