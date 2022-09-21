@@ -9,6 +9,12 @@
     "serverBuild": "cd server && npm run build",
     "build": "npm run renderBuild && npm run serverBuild",
     "dev": "cd server && npm run start:dev",
-    "start": "cd server && npm run start:prod"
+    "start": "cd server && npm run start:prod",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "husky": "^8.0.1"
   }
 }
