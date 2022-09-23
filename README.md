@@ -1,37 +1,34 @@
 # next-nest
-同胞兄弟 [next-daruk](https://github.com/keyboard3/next-daruk) daruk 轻量级的 web 框架
+采用 monorepo 管理 server 的 Nest.js 代码 和 render 的 Next.js 代码。两个仓库代码独立，不耦合。
 
-同胞兄弟 [egg-midway-next](https://github.com/keyboard3/egg-midway-next) midway 拥有阿里强大的生态
+由 server 的 Nest.js 负责启动，Nest.js 启动时会有根路由中间件分发，Next.js 的聚合接口通过 global.serverFetch 接口访问 Nest.js api
 
-[nest](https://docs.nestjs.cn/9/firststeps) 强大的 web 框架，生态完备。[Next.js](https://nextjs.org/docs)强大的 ssr 前端框架。强强联合
+在线预览 https://keyboard3.com/next-nest/
 
-[nest](https://docs.nestjs.cn/9/firststeps) 的写法, 给个 controller 的例子
-
-/src/app.controller.ts
+/server/src/cats/cats.controller.ts
 ```typescript
-import { Controller, Get, Query } from '@nestjs/common';
-import { AppService } from './app.service';
+@Controller('/api/cats')
+export class CatsController {
+  constructor(private readonly catsService: CatsService) {}
 
-@Controller('api')
-export class AppController {
-  constructor(private readonly appService: AppService) { }
+  @Post()
+  async create(@Body() createCatDto: CreateCatDto) {
+    return this.catsService.create(createCatDto);
+  }
 
-  @Get('get_user')
-  async getUser(@Query() uid: string) {
-    return this.appService.getUser(uid);
+  @Get()
+  async findAll(): Promise<Cat[]> {
+    return this.catsService.findAll();
   }
 }
 ```
 
-/pages/index.tsx
+/render/pages/index.tsx
 ```typescript
 export async function getServerSideProps(context: NextPageContext) {
-  const user: any = await getApi('get_user?uid=111');
+  const response = await global.serverFetch('http://127.0.0.1/api/cats');
   return {
-    props: { name: user.username }, // will be passed to the page component as props
+    props: { cats: response.json() }, // will be passed to the page component as props
   }
 }
 ```
-
-在线访问页面 https://keyboard3.com/next-nest/
-在线访问api https://keyboard3.com/next-nest/api/get_user
