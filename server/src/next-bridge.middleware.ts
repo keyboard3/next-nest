@@ -26,5 +26,5 @@ function exposeApiRouterMiddleware(req, res, next) {
     console.log(`page ${req.url} access`);
     nextRequestHandler(req, res, parsedUrl);
   }
-};
+}
 export default exposeApiRouterMiddleware;

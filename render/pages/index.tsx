@@ -1,7 +1,6 @@
 import type { NextPage, NextPageContext } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { getApi } from "../req-bridge"
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = ({ cats }: { cats: Cat[] }) => {
@@ -25,7 +24,7 @@ const Home: NextPage = ({ cats }: { cats: Cat[] }) => {
         <div className={styles.grid}>
           {cats.map(cat => {
             return (
-              <a href="https://nextjs.org/docs" className={styles.card}>
+              <a key={cat.name} href="https://nextjs.org/docs" className={styles.card}>
                 <h2>名字:{cat.name}</h2>
                 <p>年龄:{cat.age}</p>
                 <p>品种:{cat.breed}</p>
@@ -53,7 +52,8 @@ const Home: NextPage = ({ cats }: { cats: Cat[] }) => {
 export default Home
 
 export async function getServerSideProps(context: NextPageContext) {
-  const cats = await getApi('cats');
+  
+  const cats = await global.serverFetch('http://127.0.0.1:/api/cats');
   return {
     props: { cats }, // will be passed to the page component as props
   }
