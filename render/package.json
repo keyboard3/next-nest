@@ -5,7 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
     "build": "next build --no-lint"
   },

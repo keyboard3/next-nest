@@ -4,6 +4,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = ({ cats }: { cats: Cat[] }) => {
+  console.log("----render cats", cats, typeof cats);
   return (
     <div className={styles.container}>
       <Head>
@@ -52,10 +53,9 @@ const Home: NextPage = ({ cats }: { cats: Cat[] }) => {
 export default Home
 
 export async function getServerSideProps(context: NextPageContext) {
-  
-  const cats = await global.serverFetch('http://127.0.0.1:/api/cats');
+  const response = await global.serverFetch('http://127.0.0.1/api/cats');
   return {
-    props: { cats }, // will be passed to the page component as props
+    props: { cats: response.json() }, // will be passed to the page component as props
   }
 }
 

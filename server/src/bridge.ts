@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable prettier/prettier */
 import * as http from 'http';
 
 const mockRequest = {
@@ -16,20 +18,29 @@ const mockRequest = {
   },
 };
 function mockHttp(req: any = {}) {
-  const request = { ...JSON.parse(JSON.stringify(mockRequest)), ...req };
+  const request = { ...mockRequest, ...req };
   const response = new http.ServerResponse(request);
   return {
     request,
     response,
   };
 }
-function mockContext(req?: any) {
+function mockExpressContext(req?: any) {
   const { request, response } = mockHttp(req);
   return { req: request, res: response };
 }
-export async function getApi(handleRequest: (req, res) => void, url: string) {
+function mockKoaContext(app: any, req?: any) {
+  const { request, response } = mockHttp(req);
+  // 使用 koa 的 createContext 方法创建一个 ctx
+  const ctx = app.createContext(request, response);
+  return ctx;
+}
+export async function getExpressApi(
+  handleRequest: (req, res) => void,
+  url: string,
+) {
   const urlObj = new URL(url);
-  const mockCtx = mockContext({
+  const mockCtx = mockExpressContext({
     url: urlObj.pathname,
     path: urlObj.pathname,
     method: 'GET',
@@ -37,31 +48,51 @@ export async function getApi(handleRequest: (req, res) => void, url: string) {
   return new Promise((resolve, reject) => {
     const res: any = mockCtx.res;
     res.send = (body: any) => {
-      if (typeof body == 'string') {
-        try {
-          resolve(JSON.parse(body));
-        } catch (error) {
-          resolve(body);
-        }
-      } else {
-        resolve(body);
-      }
+      res.body = body;
+      res.json = () => JSON.parse(body);
+      res.text = () => body;
+      resolve(res);
     };
     handleRequest(mockCtx.req, mockCtx.res);
   });
 }
 
+export async function getKoaApi(koa: any, url: string) {
+  const urlObj = new URL(url);
+  const mockCtx = mockKoaContext(koa, {
+    url: urlObj.pathname,
+    path: urlObj.pathname,
+    method: 'GET',
+  });
+  const compose = require('koa-compose');
+  return new Promise((resolve, reject) => {
+    const fn = compose([
+      async (ctx: any, next: () => Promise<any>): Promise<void> => {
+        try {
+          await next();
+          ctx.response.json = () => ctx.response.body;
+          ctx.response.text = () => JSON.stringify(ctx.response.body);
+          resolve(ctx.response);
+        } catch (err) {
+          reject(err);
+        }
+      },
+      ...koa.middleware,
+    ]);
+    koa.handleRequest(mockCtx, fn);
+  });
+}
+
 import path from 'path';
 module.paths.push(path.resolve(__dirname, '../../'));
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const requestHandler = require('render');
 
 export function rootMiddleware(req, res, next) {
   if (req.url?.startsWith('/api')) {
     console.log(`api ${req.url} access`);
-    next();
+    return next();
   } else {
     console.log(`page ${req.url} access`);
-    requestHandler(req, res);
+    return requestHandler(req, res);
   }
 }
