@@ -24,6 +24,7 @@ RUN npm run serverBuild
 FROM serverdeps AS runner
 COPY --from=renderbuilder /app/render/.next ./render/.next
 COPY --from=renderbuilder /app/render/public ./render/public
+COPY --from=renderbuilder /app/render/index.js ./render/index.js
 COPY --from=serverbuilder /app/server/dist ./server/dist
 COPY --from=serverbuilder /app/server/.production.env ./server/
 
