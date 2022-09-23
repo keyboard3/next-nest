@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "main": "index.ts",
   "scripts": {
     "build": "next build --no-lint"
   },

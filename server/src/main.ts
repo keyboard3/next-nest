@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './app.module';
-import nextJS from './next-bridge.middleware';
-import { getApi } from './bridge';
+import { getApi, rootMiddleware } from './bridge';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule);
-  app.use(nextJS);
+  app.use(rootMiddleware);
   (global as any).serverFetch = getApi.bind(
     this,
     app.getHttpAdapter().getInstance(),

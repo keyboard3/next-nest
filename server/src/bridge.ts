@@ -1,4 +1,5 @@
 import * as http from 'http';
+
 const mockRequest = {
   headers: {
     'x-forwarded-for': '127.0.0.1',
@@ -48,4 +49,19 @@ export async function getApi(handleRequest: (req, res) => void, url: string) {
     };
     handleRequest(mockCtx.req, mockCtx.res);
   });
+}
+
+import path from 'path';
+module.paths.push(path.resolve(__dirname, '../../'));
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const requestHandler = require('render');
+
+export function rootMiddleware(req, res, next) {
+  if (req.url?.startsWith('/api')) {
+    console.log(`api ${req.url} access`);
+    next();
+  } else {
+    console.log(`page ${req.url} access`);
+    requestHandler(req, res);
+  }
 }
